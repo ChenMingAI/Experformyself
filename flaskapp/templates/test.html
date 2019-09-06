@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
+</head>
+<body>
+    <input type="button" value="输入" id="btn1" name="n_btn1"/>
+<script>
+   $(function () {
+        $("#btn1").click(function () { alert('OK2') });
+    });
+var p = $('#btn1')
+t = $._data
+
+for(var i in $._data(p[0], "events")){
+    console.log(i); // ‘click’，‘touchstart’，‘touchmove’，‘touchend’......
+}
+
+</script>
+</body>
+</html>

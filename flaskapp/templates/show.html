@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+
+</head>
+<body>
+<img id="receive">
+<script>
+// var ws = new WebSocket("ws://127.0.0.1:5000/test");
+var img = document.getElementById("receive")
+// ws.onopen = function(event) {
+// console.log("Connection open ...");
+
+// };
+// ws.onmessage = function(info){
+// img.src = info.data
+// }
+
+var socket = io.connect("ws://127.0.0.1:5000/test")
+var res
+socket.on('video response', function (res) {
+    console.log("getdata from server...")
+    console.log(res.data)
+    img.src = res.data
+});
+</script>
+</body>
+</html>

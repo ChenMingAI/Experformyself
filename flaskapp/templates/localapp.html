@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+
+</head>
+<body>
+
+    <div>
+    <video id="video" width="640" height="480" autoplay=""></video>
+        <canvas id = "output"></canvas>
+    </div>
+    <script>
+    // function onOffer(offer){
+	// yourConnection.setRemoteDescription(new RTCSessionDescription(offer));
+	// yourConnection.createAnswer(function(_answer){
+	// 	yourConnection.setLocalDescription(_answer);
+	// 	send({
+	// 		type: 'answer',
+	// 		answer: _answer
+	// 	});
+	// }, function(err){
+	// 	console.log('An error occur on onOffer.');
+	// });
+    // };
+
+
+
+    function hasRTCPeerConnection(){
+	window.RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+	window.RTCSessionDescription = window.RTCSessionDescription || window.webkitRTCSessionDescription || window.mozRTCSessionDescription;
+	window.RTCIceCandidate = window.RTCIceCandidate || window.webkitRTCIceCandidate || window.mozRTCIceCandidate;
+	return !!window.RTCPeerConnection;
+    }
+    // function setupPeerConnection(stream){
+	// var configuration = {
+    //     "iceServers": [{
+	// 		 "url": "stun:127.0.0.1:5000"
+	// 	}]
+	// };
+	// yourConnection = new RTCPeerConnection(configuration);
+	// yourConnection.addStream(stream);
+	// yourConnection.onaddstream = function(e){
+	// 	theirVideo.src = window.URL.createObjectURL(e.stream);
+	// };
+	// yourConnection.onicecandidate = function(e){
+	// 	if(e.candidate){
+	// 		send({
+	// 			type: "candidate",
+	// 			candidate: e.candidate
+	// 		});
+	// 	}
+	// };
+    // };
+    // var ws = new WebSocket("ws://127.0.0.1:5000/test");
+    // ws.onopen = function(event) {
+    //     clearInterval(internal)
+    //     internal = setInterval(draw, 50)
+    //     console.log("Connection open ...");
+        
+    // };
+    var internal;
+    var backContext = document.getElementById("output").getContext("2d");
+    var localVideo = document.getElementById("video");
+    var back = document.getElementById("output");
+    var SocketIO = io.connect("ws://127.0.0.1:5000/test")
+
+    function draw(){
+        // ws.send(back.toDataURL("image/jpeg", 0.5))
+        backContext.drawImage(video, 0, 0, back.width, back.height)
+        SocketIO.emit('my other event', { data: back.toDataURL("image/jpeg", 0.5)});
+        
+        console.log("Send message")
+    }
+    navigator._getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.msGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia);
+    navigator._getUserMedia(
+    {
+        video: true,
+        audio: false
+    },function(myStream){
+        localVideo.srcObject = myStream;
+    },function(error){
+		console.log(error);
+	}
+    );
+    setTimeout(draw, 4000);
+    draw()
+    setInterval(draw,10);
+
+    </script>
+    </body>
+</html>
